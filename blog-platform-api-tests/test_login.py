@@ -1,3 +1,5 @@
+from ctypes.macholib.dyld import dyld_default_search
+
 import requests
 from config import BASE_URL,TIMEOUT,API_LOGIN
 from utils import load_test_data
@@ -19,13 +21,10 @@ def test_login_success():
     #拼接地址
     url = BASE_URL + API_LOGIN
     data = test_data["login"]["valid_user"]
-
     #发送
     response = requests.post(url,json=data,timeout=TIMEOUT)
-
     # 断言
     assert response.status_code == 200, f"HTTP状态码错误：{response.status_code}"
-
     resp_json = response.json()
     assert resp_json["code"] == 200, f"业务状态码错误：{resp_json['code']}"
     assert "data" in resp_json, "返回数据中没有data字段"
@@ -35,8 +34,30 @@ def test_login_success():
     return resp_json["data"]["token"]  # 返回 token 供后续使用
 
 #错误的密码
+def test_login_FPassword():
+    url = BASE_URL + API_LOGIN
+    data = test_data["login"]["wrong_password"]
+    response = requests.post(url,json=data,timeout=TIMEOUT)
+    resp_json = response.json()
+    assert resp_json["code"] != 200 ,"错误密码不该登录成功"
+    if resp_json["data"] is not None:
+        assert resp_json["data"]['token'] != None,"密码错误不应该有token"
+    return "错误密码登录失败,测试成功"
 
 #不存在的用户
+def test_login_Fusername():
+    url = BASE_URL +API_LOGIN
+    data = test_data["login"]["not_exist_user"]
+    response = requests.post(url,json=data,timeout=TIMEOUT)
 
+    resp_json = response.json()
+
+    assert resp_json["code"] != 200,"不存在的用户登录失败"
+    if resp_json["data"] is not None:
+        assert resp_json["data"]["token"] ==None,"不存在的用户没有token"
+
+    return "不存在的用户登录失败,测试成功"
 #最后执行手动后测试
 
+
+print(test_login_Fusername())
