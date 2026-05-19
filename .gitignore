@@ -1,0 +1,24 @@
+# created by virtualenv automatically
+
+# 虚拟环境（重要！）
+.venv/
+venv/
+env/
+
+# Python 缓存
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE 配置
+.idea/
+.vscode/
+*.iml
+
+# 测试报告
+reports/
+*.html
+*.log
+
+# 本地配置（如果有）
+local_config.py
