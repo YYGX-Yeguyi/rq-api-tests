@@ -1,5 +1,3 @@
-from ctypes.macholib.dyld import dyld_default_search
-
 import requests
 from config import BASE_URL,TIMEOUT,API_LOGIN
 from utils import load_test_data

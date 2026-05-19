@@ -2,6 +2,7 @@ from email.header import Header
 
 import requests
 import json
+import os
 from config import BASE_URL,TIMEOUT
 
 def post(url,data=None,headers=None,need_auth=False,token=None):
@@ -50,10 +51,14 @@ def delete(url, need_auth=False, token=None):
     return response
 
 
-def load_test_data(file_path):
+def load_test_data(file_name):
     """
     加载 JSON 测试数据
     """
+    # 获取当前文件所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, file_name)
+
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
