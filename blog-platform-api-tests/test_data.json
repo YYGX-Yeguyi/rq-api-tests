@@ -1,0 +1,25 @@
+{
+    "login": {
+        "valid_user": {
+            "username": "admin",
+            "password": "123456"
+        },
+        "wrong_password": {
+            "username": "admin",
+            "password": "wrong"
+        },
+        "not_exist_user": {
+            "username": "notexist",
+            "password": "123"
+        }
+    },
+    "article": {
+        "new_article": {
+            "title": "自动化测试文章",
+            "content": "这是通过自动化测试创建的文章",
+            "summary": "测试摘要",
+            "categoryId": 1,
+            "status": 1
+        }
+    }
+}
