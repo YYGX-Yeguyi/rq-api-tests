@@ -1,7 +1,5 @@
-import requests
 from config import *
-from test_login import test_login_success
-
+from conftest import *
 
 def test_get_article_list():
     """测试：获取文章列表"""
@@ -15,7 +13,7 @@ def test_get_article_list():
     assert "data" in resp_json
     assert "records" in resp_json["data"]
 
-    print(f"✅ 获取文章列表测试通过，共 {len(resp_json['data']['records'])} 篇文章")
+    print(f"获取文章列表测试通过，共 {len(resp_json['data']['records'])} 篇文章")
 
 
 def test_get_article_detail():
@@ -32,7 +30,7 @@ def test_get_article_detail():
     assert "data" in resp_json
     assert resp_json["data"]["id"] == article_id
 
-    print(f"✅ 获取文章详情测试通过，文章ID: {article_id}")
+    print(f"获取文章详情测试通过，文章ID: {article_id}")
 
 
 def test_get_article_detail_not_exist():
@@ -46,33 +44,33 @@ def test_get_article_detail_not_exist():
     # 不存在的文章，返回 code 应该不是 200
     assert resp_json["code"] != 200
 
-    print(f"✅ 获取不存在的文章测试通过")
+    print(f"获取不存在的文章测试通过")
 
 
-def test_create_article_with_auth():
+def test_create_article_with_auth(login_token,base_url):
     """测试：创建文章（需要登录）"""
-    # 1. 先登录获取 token
-    token = test_login_success()
+    # 1. 先登录获取 token fix:使用fixture获取token
+    #token = test_login_success()
 
     # 2. 创建文章
     url = BASE_URL + API_ARTICLE_SAVE
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {"Authorization": f"Bearer {login_token}"}
 
     article_data = {
-        "title": "【自动化测试】测试文章",
-        "content": "这是通过自动化脚本创建的文章内容",
-        "summary": "自动化测试摘要",
+        "title": "【pytest fixture】测试文章",
+        "content": "这是通过 fixture 获取 token 创建",
+        "summary": " fixture 测试",
         "categoryId": 1,
         "status": 1
     }
 
     response = requests.post(url, json=article_data, headers=headers, timeout=TIMEOUT)
 
-    assert response.status_code == 200
+    assert response.status_code == 200,"请求发送成功"
     resp_json = response.json()
-    assert resp_json["code"] == 200
+    assert resp_json["code"] == 200,"业务请求成功"
 
-    print(f"✅ 创建文章测试通过")
+    print(f"创建文章测试通过")
 
 
 def test_create_article_without_auth():
@@ -93,7 +91,7 @@ def test_create_article_without_auth():
     # 根据你的 API 设计，可能返回 code=401 或 status_code=401
     assert resp_json["code"] != 200 or response.status_code == 401
 
-    print(f"✅ 未登录创建文章测试通过（正确拒绝）")
+    print(f"未登录创建文章测试通过（正确拒绝）")
 
 
 if __name__ == "__main__":

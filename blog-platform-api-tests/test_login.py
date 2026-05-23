@@ -28,8 +28,7 @@ def test_login_success():
     assert "data" in resp_json, "返回数据中没有data字段"
     assert "token" in resp_json["data"], "返回数据中没有token"
 
-    print("登录成功测试通过")
-    return resp_json["data"]["token"]  # 返回 token 供后续使用
+    print("登录成功测试通过")  # 返回 token 供后续使用
 
 #错误的密码
 def test_login_FPassword():
@@ -40,7 +39,7 @@ def test_login_FPassword():
     assert resp_json["code"] != 200 ,"错误密码不该登录成功"
     if resp_json["data"] is not None:
         assert resp_json["data"]['token'] != None,"密码错误不应该有token"
-    return "错误密码登录失败,测试成功"
+    print("错误密码登录失败,测试成功")
 
 #不存在的用户
 def test_login_Fusername():
@@ -54,8 +53,5 @@ def test_login_Fusername():
     if resp_json["data"] is not None:
         assert resp_json["data"]["token"] ==None,"不存在的用户没有token"
 
-    return "不存在的用户登录失败,测试成功"
-#最后执行手动后测试
+    print("不存在的用户登录失败,测试成功")
 
-
-print(test_login_Fusername())
