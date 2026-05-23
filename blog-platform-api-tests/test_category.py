@@ -23,7 +23,10 @@ def test_category_list():
         assert "id" in first_category, "分类数据中没有id"
         assert "name" in first_category, "分类数据中没有name"
     clist = resp_json["data"]
-    print(f"成功通过测试,有{len(resp_json["data"])}个分类,"
-          f"分别是{clist[0]['name']},{clist[1]['name']},{clist[2]['name']}")
-
+    # print(f"成功通过测试,有{len(resp_json["data"])}个分类,"
+    #       f"分别是{clist[0]['name']},{clist[1]['name']},{clist[2]['name']}")
+    #fix 修复硬编码问题,超过三个分类会崩溃
+    categories = resp_json["data"]
+    category_names = [c['name'] for c in categories]
+    print(f"✅ 获取分类列表成功，共 {len(categories)} 个分类: {', '.join(category_names)}")
     return None
