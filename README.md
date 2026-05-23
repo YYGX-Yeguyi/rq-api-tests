@@ -1,5 +1,22 @@
 # rq-api-tests 个人 API 自动化测试项目
 
+# 
+
+<div align="center">
+
+
+<!-- 第一行 -->
+![Python Version](https://img.shields.io/badge/Python-3.14-blue)
+![pytest](https://img.shields.io/badge/pytest-9.0-blue)
+![Requests](https://img.shields.io/badge/Requests-2.32-blue)
+
+<!-- 第二行 -->
+![Test Cases](https://img.shields.io/badge/测试用例-9个-brightgreen)
+![Pass Rate](https://img.shields.io/badge/通过率-100%25-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+</div>
+
 ## 项目简介
 
 本项目是对个人开发的博客平台后端 API 进行的接口自动化测试。基于 **Python + Pytest + Requests** 构建，覆盖用户登录、分类管理、文章管理等核心模块，实现了测试数据与代码分离、session 级 token 共享、HTML 报告自动生成等功能。
