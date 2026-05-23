@@ -8,7 +8,7 @@ test_data = load_test_data("test_data.json")
 def login_token():
     url = BASE_URL + API_LOGIN
     data = test_data["login"]["valid_user"]
-    response = requests.post(url,data=data,timeout=TIMEOUT)
+    response = requests.post(url,json=data,timeout=TIMEOUT)
     resp = response.json()
 
     #断言是非登录成功
