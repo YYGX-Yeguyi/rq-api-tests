@@ -20,9 +20,9 @@ def post(url,data=None,headers=None,need_auth=False,token=None):
     if need_auth and token:
         req_headers['Authorization'] = f'Bearer {token}'
 
-        # 发送请求
-        response = requests.post(full_url, json=data, headers=req_headers, timeout=TIMEOUT)
-        return response
+    # 发送请求 fix:修正缩进,代码问题
+    response = requests.post(full_url, json=data, headers=req_headers, timeout=TIMEOUT)
+    return response
 
 def get(url, need_auth=False, token=None):
     """
