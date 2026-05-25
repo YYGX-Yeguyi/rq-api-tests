@@ -1,5 +1,5 @@
 import requests
-from config import BASE_URL,TIMEOUT,API_LOGIN
+from config import TIMEOUT,API_LOGIN
 from utils import load_test_data
 
 #加载测试数据

@@ -1,7 +1,7 @@
 from os import name
 
 import requests
-from config import BASE_URL,API_CATEGORY_LIST
+from config import API_CATEGORY_LIST
 
 def test_category_list(base_url):
     #拼接地址
