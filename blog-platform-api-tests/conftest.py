@@ -21,10 +21,6 @@ def login_token():
     print(f"/n [conftest] 获取token成功,token:{token:30}")
     return token
 
-@pytest.fixture(scope="session")
-def base_url():
-    return BASE_URL
-
 def pytest_addoption(parser):
     """添加自定义命令行参数 --env"""
     parser.addoption(
@@ -44,7 +40,7 @@ def base_url(env):
     """根据环境返回不同的 BASE_URL"""
     urls = {
         "dev": "http://localhost:8080",
-        "test": "http://test.blog-platform.com",
-        "prod": "https://http://47.116.30.242:8080"   # 改成你真实的生产地址
+        "test": "http://47.116.30.242:8080",
+        "prod": "http://47.116.30.242:8080"   # 改成你真实的生产地址
     }
     return urls[env]
