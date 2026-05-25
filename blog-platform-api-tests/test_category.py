@@ -3,9 +3,9 @@ from os import name
 import requests
 from config import BASE_URL,API_CATEGORY_LIST
 
-def test_category_list():
+def test_category_list(base_url):
     #拼接地址
-    url = BASE_URL+API_CATEGORY_LIST
+    url = base_url+API_CATEGORY_LIST
     #发送get请求
     response = requests.get(url)
     assert response.status_code == 200,"请求失败"

@@ -25,3 +25,26 @@ def login_token():
 def base_url():
     return BASE_URL
 
+def pytest_addoption(parser):
+    """添加自定义命令行参数 --env"""
+    parser.addoption(
+        "--env",
+        action="store",
+        default="dev",
+        choices=("dev", "test", "prod"),
+        help="运行环境: dev(默认), test, prod"
+    )
+@pytest.fixture(scope="session")
+def env(request):
+    """返回当前环境名称"""
+    return request.config.getoption("--env")
+
+@pytest.fixture(scope="session")
+def base_url(env):
+    """根据环境返回不同的 BASE_URL"""
+    urls = {
+        "dev": "http://localhost:8080",
+        "test": "http://test.blog-platform.com",
+        "prod": "https://http://47.116.30.242:8080"   # 改成你真实的生产地址
+    }
+    return urls[env]

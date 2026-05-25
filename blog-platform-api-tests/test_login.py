@@ -6,7 +6,7 @@ from utils import load_test_data
 test_data = load_test_data("test_data.json")
 #定义不同的测试用例的函数
 #成功
-def test_login_success():
+def test_login_success(base_url):
     '''
         1.拼接地址
         2.找出json数据中的成功的数据
@@ -17,7 +17,7 @@ def test_login_success():
         7.最后输出成功登录,并返回token的值给其他请求使用
     '''
     #拼接地址
-    url = BASE_URL + API_LOGIN
+    url = base_url + API_LOGIN
     data = test_data["login"]["valid_user"]
     #发送
     response = requests.post(url,json=data,timeout=TIMEOUT)
@@ -31,8 +31,8 @@ def test_login_success():
     print("登录成功测试通过")  # 返回 token 供后续使用
 
 #错误的密码
-def test_login_FPassword():
-    url = BASE_URL + API_LOGIN
+def test_login_FPassword(base_url):
+    url = base_url + API_LOGIN
     data = test_data["login"]["wrong_password"]
     response = requests.post(url,json=data,timeout=TIMEOUT)
     resp_json = response.json()
@@ -42,8 +42,8 @@ def test_login_FPassword():
     print("错误密码登录失败,测试成功")
 
 #不存在的用户
-def test_login_Fusername():
-    url = BASE_URL +API_LOGIN
+def test_login_Fusername(base_url):
+    url = base_url +API_LOGIN
     data = test_data["login"]["not_exist_user"]
     response = requests.post(url,json=data,timeout=TIMEOUT)
 

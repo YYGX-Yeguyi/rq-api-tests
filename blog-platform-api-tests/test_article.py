@@ -1,9 +1,9 @@
 from config import *
-from conftest import *
+import requests
 
-def test_get_article_list():
+def test_get_article_list(base_url):
     """测试：获取文章列表"""
-    url = BASE_URL + API_ARTICLE_LIST
+    url = base_url + API_ARTICLE_LIST
 
     response = requests.get(url, timeout=TIMEOUT)
 
@@ -16,11 +16,11 @@ def test_get_article_list():
     print(f"获取文章列表测试通过，共 {len(resp_json['data']['records'])} 篇文章")
 
 
-def test_get_article_detail():
+def test_get_article_detail(base_url):
     """测试：获取文章详情（使用存在的文章ID）"""
     # 先用 1 作为测试文章ID，实际应该从列表接口获取
     article_id = 2
-    url = BASE_URL + f"{API_ARTICLE_DETAIL}/{article_id}"
+    url = base_url + f"{API_ARTICLE_DETAIL}/{article_id}"
 
     response = requests.get(url, timeout=TIMEOUT)
 
@@ -33,10 +33,10 @@ def test_get_article_detail():
     print(f"获取文章详情测试通过，文章ID: {article_id}")
 
 
-def test_get_article_detail_not_exist():
+def test_get_article_detail_not_exist(base_url):
     """测试：获取不存在的文章详情"""
     article_id = 99999
-    url = BASE_URL + f"{API_ARTICLE_DETAIL}/{article_id}"
+    url = base_url + f"{API_ARTICLE_DETAIL}/{article_id}"
 
     response = requests.get(url, timeout=TIMEOUT)
 
@@ -53,7 +53,7 @@ def test_create_article_with_auth(login_token,base_url):
     #token = test_login_success()
 
     # 2. 创建文章
-    url = BASE_URL + API_ARTICLE_SAVE
+    url = base_url + API_ARTICLE_SAVE
     headers = {"Authorization": f"Bearer {login_token}"}
 
     article_data = {
@@ -73,9 +73,9 @@ def test_create_article_with_auth(login_token,base_url):
     print(f"创建文章测试通过")
 
 
-def test_create_article_without_auth():
+def test_create_article_without_auth(base_url):
     """测试：未登录创建文章（应该失败）"""
-    url = BASE_URL + API_ARTICLE_SAVE
+    url = base_url + API_ARTICLE_SAVE
 
     article_data = {
         "title": "未登录创建的文章",

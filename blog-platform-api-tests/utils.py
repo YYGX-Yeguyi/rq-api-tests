@@ -3,6 +3,9 @@ from email.header import Header
 import requests
 import json
 import os
+
+from openai import base_url
+
 from config import BASE_URL,TIMEOUT
 
 def post(url,data=None,headers=None,need_auth=False,token=None):
@@ -28,7 +31,7 @@ def get(url, need_auth=False, token=None):
     """
     封装 GET 请求
     """
-    full_url = BASE_URL + url
+    full_url = base_url + url
 
     headers = {}
     if need_auth and token:
