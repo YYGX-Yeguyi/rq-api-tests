@@ -115,7 +115,7 @@ def test_delete_article_without_auth(base_url):
     article_id = 126
 
     response = requests.delete(f"{url}/{article_id}", timeout=TIMEOUT)
-    assert response.status_code == 200
+    assert response.status_code == 401
     resp_json = response.json()
     assert resp_json["code"] != 200 or response.status_code == 401
 
