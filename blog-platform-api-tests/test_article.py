@@ -94,6 +94,20 @@ def test_create_article_without_auth(base_url):
     print(f"未登录创建文章测试通过（正确拒绝）")
 
 
+def test_delete_article_with_auth(login_token,base_url):
+    url = base_url + API_ARTICLE_DELETE
+    article_id = 125
+    headers = {
+        "Authorization": f"Bearer {login_token}"
+    }
+
+    response = requests.delete(f"{url}/{article_id}", headers=headers, timeout=TIMEOUT)
+    assert response.status_code == 200
+    resp_json = response.json()
+    assert resp_json["code"] == 200
+
+
+
 if __name__ == "__main__":
     print("=" * 50)
     print("开始测试文章接口")
