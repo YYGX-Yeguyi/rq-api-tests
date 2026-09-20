@@ -1,7 +1,3 @@
-from asyncio import timeout
-
-from pytest_html.extras import url
-
 from config import *
 import requests
 
