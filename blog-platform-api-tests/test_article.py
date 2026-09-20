@@ -1,3 +1,7 @@
+from asyncio import timeout
+
+from pytest_html.extras import url
+
 from config import *
 import requests
 
@@ -105,6 +109,15 @@ def test_delete_article_with_auth(login_token,base_url):
     assert response.status_code == 200
     resp_json = response.json()
     assert resp_json["code"] == 200
+
+def test_delete_article_without_auth(base_url):
+    url = base_url + API_ARTICLE_DELETE
+    article_id = 126
+
+    response = requests.delete(f"{url}/{article_id}", timeout=TIMEOUT)
+    assert response.status_code == 200
+    resp_json = response.json()
+    assert resp_json["code"] != 200 or response.status_code == 401
 
 
 
