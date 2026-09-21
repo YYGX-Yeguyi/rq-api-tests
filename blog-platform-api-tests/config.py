@@ -1,7 +1,5 @@
 # config.py
 # 配置文件：存放环境相关的配置
-# 基础 URL
-BASE_URL = "http://localhost:8080"
 
 # API 路径
 API_LOGIN = "/api/auth/login"

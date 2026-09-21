@@ -1,12 +1,12 @@
 import pytest
 import requests
-from config import TIMEOUT,API_LOGIN,BASE_URL
+from config import TIMEOUT,API_LOGIN
 from utils import load_test_data
 
 test_data = load_test_data("test_data.json")
 @pytest.fixture(scope="session")#整个测试过程只执行一次
-def login_token():
-    url = BASE_URL + API_LOGIN
+def login_token(base_url):
+    url = base_url + API_LOGIN
     data = test_data["login"]["valid_user"]
     response = requests.post(url,json=data,timeout=TIMEOUT)
     resp = response.json()
