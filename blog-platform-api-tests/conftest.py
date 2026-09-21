@@ -34,7 +34,7 @@ def article_id(login_token, base_url):
     yield aid
 
     requests.delete(
-        f"{url}/article/delete/{aid}",
+        f"{url}/{aid}",
         headers=headers,
         timeout=TIMEOUT,
     )
