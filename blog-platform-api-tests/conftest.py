@@ -33,11 +33,12 @@ def article_id(login_token, base_url):
 
     yield aid
 
-    requests.delete(
+    detail_resp = requests.delete(
         f"{url}/{aid}",
         headers=headers,
         timeout=TIMEOUT,
-    )
+    ).json()
+    assert detail_resp["code"] == 500, "删除后仍能查到，删除未生效"
 
 @pytest.fixture(scope="session")#整个测试过程只执行一次
 def login_token(base_url):
