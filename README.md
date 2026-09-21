@@ -91,10 +91,25 @@ pip install -r ../requirements.txt
 
 ### 3. 配置后端地址
 
-修改 `config.py` 中的 `BASE_URL`：
+环境地址统一在 `conftest.py` 的 `base_url` fixture 中维护，通过 `--env` 参数切换：
 
 ```python
-BASE_URL = "http://localhost:8080"   # 改成你的后端地址
+@pytest.fixture(scope="session")
+def base_url(env):
+    urls = {
+        "dev": "http://localhost:8080",        # 本地开发环境
+        "test": "http://47.116.30.242:8080",   # 测试服务器
+        "prod": "http://47.116.30.242:8080"    # 改成你真实的生产地址
+    }
+    return urls[env]
+```
+
+切换环境时使用 `--env` 参数（默认 `dev`）：
+
+```bash
+pytest                          # 默认 dev 环境
+pytest --env=test               # 测试环境
+pytest --env=prod               # 生产环境
 ```
 
 ### 4. 运行测试
@@ -164,13 +179,13 @@ test_login.py::test_login_Fusername PASSED
 2. **数据驱动**：测试数据与代码分离，修改数据无需改动代码
 3. **模块化设计**：按功能拆分测试文件，通过 `conftest.py` 统一管理配置
 4. **自动化报告**：每次测试自动生成 HTML 报告，便于结果分析
-5. **版本控制**：代码托管于 GitHub，支持团队协作
+5. **多环境切换**：通过 `--env` 参数在 dev/test/prod 之间切换，登录与业务请求统一指向同一环境
+6. **版本控制**：代码托管于 GitHub，支持团队协作
 
 ## 后续计划
 
 - [ ] 集成 GitHub Actions，实现 CI/CD 自动测试
 - [ ] 增加更多边界值测试用例
-- [ ] 支持多环境配置切换（dev/test/prod）
 - [ ] 增加日志模块，便于问题排查
 
 ## 作者
