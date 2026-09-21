@@ -1,5 +1,3 @@
-from os import name
-
 import requests
 from config import API_CATEGORY_LIST
 
