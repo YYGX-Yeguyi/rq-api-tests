@@ -16,9 +16,11 @@ __pycache__/
 *.iml
 
 # 测试报告
+allure-results/
 reports/
 *.html
 *.log
 
 # 本地配置（如果有）
 local_config.py
+/blog-platform-api-tests/allure-results/
