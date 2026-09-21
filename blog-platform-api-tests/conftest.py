@@ -1,9 +1,44 @@
 import pytest
 import requests
-from config import TIMEOUT,API_LOGIN
+from config import TIMEOUT,API_LOGIN,API_ARTICLE_SAVE,API_ARTICLE_LIST
 from utils import load_test_data
 
 test_data = load_test_data("test_data.json")
+
+@pytest.fixture(scope="session")
+def article_id(login_token, base_url):
+    #增加虚拟删除文章
+    url = base_url + API_ARTICLE_SAVE
+    body = {
+        "title": "【临时】删除用例专用文章",
+        "content": "# 测试正文",
+        "summary": "用于删除测试，跑完自动清理",
+        "categoryId": 1,
+        "status": 1,
+        "isTop": 0,
+    }
+    headers ={"Authorization": f"Bearer {login_token}"}
+    resp = requests.post(url, json=body, headers=headers,timeout=TIMEOUT).json()
+    assert resp['code'] == 200, f"创建文章失败:{resp}"
+    # 由于我的保存返回   data空,所以要获取最新文章获取id
+
+    url = base_url + API_ARTICLE_LIST
+    list_resp = requests.get(
+        f"{url}",
+        params={"page": 1, "size": 1},
+        timeout=TIMEOUT,
+    ).json()
+    print(list_resp)
+    aid = list_resp["data"]["records"][0]["id"]
+
+    yield aid
+
+    requests.delete(
+        f"{url}/article/delete/{aid}",
+        headers=headers,
+        timeout=TIMEOUT,
+    )
+
 @pytest.fixture(scope="session")#整个测试过程只执行一次
 def login_token(base_url):
     url = base_url + API_LOGIN
