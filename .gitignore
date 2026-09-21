@@ -24,3 +24,4 @@ reports/
 # 本地配置（如果有）
 local_config.py
 /blog-platform-api-tests/allure-results/
+/修改bug计划.md
