@@ -1,6 +1,6 @@
 import pytest
 import requests
-from config import TIMEOUT,API_LOGIN,API_ARTICLE_SAVE,API_ARTICLE_LIST
+from config import TIMEOUT,API_LOGIN,API_ARTICLE_SAVE,API_ARTICLE_LIST,API_ARTICLE_DELETE
 from utils import load_test_data
 
 test_data = load_test_data("test_data.json")
@@ -33,12 +33,10 @@ def article_id(login_token, base_url):
 
     yield aid
 
-    detail_resp = requests.delete(
-        f"{url}/{aid}",
-        headers=headers,
-        timeout=TIMEOUT,
-    ).json()
-    assert detail_resp["code"] == 500, "删除后仍能查到，删除未生效"
+    delete_url = base_url + API_ARTICLE_DELETE + f"/{aid}"
+    delete_resp = requests.delete(delete_url, headers=headers, timeout=TIMEOUT).json()
+    # 200=本次清理成功；404=用例已删除该文章，无需重复清理
+    assert delete_resp["code"] in (200, 404), f"清理虚拟文章失败:{delete_resp}"
 
 @pytest.fixture(scope="session")#整个测试过程只执行一次
 def login_token(base_url):
@@ -54,7 +52,7 @@ def login_token(base_url):
 
     token = resp["data"]["token"]
 
-    print(f"/n [conftest] 获取token成功,token:{token:30}")
+    print(f"\n [conftest] 获取token成功,token:{token:30}")
     return token
 
 def pytest_addoption(parser):
