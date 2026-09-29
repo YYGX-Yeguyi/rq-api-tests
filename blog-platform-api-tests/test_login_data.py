@@ -7,13 +7,13 @@ from config import API_LOGIN
 
 DATA_DIR = Path(__file__).parent / "data"
 
-def test_login_cases():
-    with open(DATA_DIR / "login_data.yaml", encoding="utf-8") as f:
+def load_login_cases():
+    with open(DATA_DIR / "login_data.yml", encoding="utf-8") as f:
         cases = yaml.safe_load(f)
         # pprint(cases["cases"])
         return cases["cases"]
 
-@pytest.mark.parametrize("case", test_login_cases())
+@pytest.mark.parametrize("case", load_login_cases())
 def test_login(base_url,case):
     url = f"{base_url}{API_LOGIN}"
 
