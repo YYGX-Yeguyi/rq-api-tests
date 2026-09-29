@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 import requests
 from config import *
@@ -7,29 +9,29 @@ test_data = load_test_data("test_data.json")
 
 @pytest.fixture(scope="session")
 def article_id(login_token, base_url):
-    #增加虚拟删除文章
+    # 唯一标题：save 返回 data 为空拿不到 id，靠唯一标题反查，避免同秒创建时"查最新"拿错
+    unique_title = f"【临时】删除用例专用文章-{uuid.uuid4().hex[:6]}"
     url = base_url + API_ARTICLE_SAVE
     body = {
-        "title": "【临时】删除用例专用文章",
+        "title": unique_title,
         "content": "# 测试正文",
         "summary": "用于删除测试，跑完自动清理",
         "categoryId": 1,
         "status": 1,
         "isTop": 0,
     }
-    headers ={"Authorization": f"Bearer {login_token}"}
-    resp = requests.post(url, json=body, headers=headers,timeout=TIMEOUT).json()
+    headers = {"Authorization": f"Bearer {login_token}"}
+    resp = requests.post(url, json=body, headers=headers, timeout=TIMEOUT).json()
     assert resp['code'] == 200, f"创建文章失败:{resp}"
-    # 由于我的保存返回   data空,所以要获取最新文章获取id
 
-    url = base_url + API_ARTICLE_LIST
     list_resp = requests.get(
-        f"{url}",
-        params={"page": 1, "size": 1},
+        base_url + API_ARTICLE_LIST,
+        params={"page": 1, "size": 50},
         timeout=TIMEOUT,
     ).json()
-    print(list_resp)
-    aid = list_resp["data"]["records"][0]["id"]
+    matched = [r["id"] for r in list_resp["data"]["records"] if r["title"] == unique_title]
+    assert matched, f"按唯一标题未找到临时文章:{unique_title}"
+    aid = matched[0]
 
     yield aid
 
