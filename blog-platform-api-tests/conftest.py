@@ -1,6 +1,6 @@
 import pytest
 import requests
-from config import TIMEOUT,API_LOGIN,API_ARTICLE_SAVE,API_ARTICLE_LIST,API_ARTICLE_DELETE
+from config import *
 from utils import load_test_data
 
 test_data = load_test_data("test_data.json")
