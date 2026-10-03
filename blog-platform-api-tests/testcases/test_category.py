@@ -1,11 +1,13 @@
 import requests
-from config import API_CATEGORY_LIST
+from config.settings import *
+
+from common.api_client import *
 
 def test_category_list(base_url):
     #拼接地址
     url = base_url+API_CATEGORY_LIST
     #发送get请求
-    response = requests.get(url)
+    response = get(url)
     assert response.status_code == 200,"请求失败"
     #获取返回的数据
     resp_json = response.json()

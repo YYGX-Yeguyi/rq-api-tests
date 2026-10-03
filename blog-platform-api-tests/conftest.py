@@ -1,9 +1,10 @@
 import uuid
 
 import pytest
-import requests
-from config import *
-from utils import load_test_data
+
+from common.api_client import *
+from config.settings import *
+from common.utils import load_test_data
 
 test_data = load_test_data("test_data.json")
 
@@ -20,14 +21,12 @@ def article_id(login_token, base_url):
         "status": 1,
         "isTop": 0,
     }
-    headers = {"Authorization": f"Bearer {login_token}"}
-    resp = requests.post(url, json=body, headers=headers, timeout=TIMEOUT).json()
+    resp = post(url,body,login_token).json()
     assert resp['code'] == 200, f"创建文章失败:{resp}"
 
-    list_resp = requests.get(
+    list_resp = get(
         base_url + API_ARTICLE_LIST,
-        params={"page": 1, "size": 50},
-        timeout=TIMEOUT,
+        params={"page": 1, "size": 50}
     ).json()
     matched = [r["id"] for r in list_resp["data"]["records"] if r["title"] == unique_title]
     assert matched, f"按唯一标题未找到临时文章:{unique_title}"
@@ -36,17 +35,16 @@ def article_id(login_token, base_url):
     yield aid
 
     delete_url = base_url + API_ARTICLE_DELETE + f"/{aid}"
-    delete_resp = requests.delete(delete_url, headers=headers, timeout=TIMEOUT).json()
+    delete_resp = delete(delete_url,login_token).json()
     # 200=本次清理成功；404=用例已删除该文章，无需重复清理
     assert delete_resp["code"] in (200, 404), f"清理虚拟文章失败:{delete_resp}"
 
 @pytest.fixture(scope="session")#整个测试过程只执行一次
 def login_token(base_url):
     url = base_url + API_LOGIN
-    data = test_data["login"]["valid_user"]
-    response = requests.post(url,json=data,timeout=TIMEOUT)
+    json = test_data["login"]["valid_user"]
+    response = post(url,json)
     resp = response.json()
-
     #断言是非登录成功
     assert resp["code"]==200,"登录失败"
     assert "token"  in resp["data"],"返回数据没有token"

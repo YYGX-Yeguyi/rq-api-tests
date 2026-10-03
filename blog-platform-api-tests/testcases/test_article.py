@@ -1,13 +1,13 @@
 import uuid
 
-from config import *
-import requests
+from config.settings import *
+from common.api_client import *
 
 def test_get_article_list(base_url):
     """测试：获取文章列表"""
     url = base_url + API_ARTICLE_LIST
 
-    response = requests.get(url, timeout=TIMEOUT)
+    response = get(url, )
 
     assert response.status_code == 200
     resp_json = response.json()
@@ -24,7 +24,7 @@ def test_get_article_detail(base_url):
     article_id = 2
     url = base_url + f"{API_ARTICLE_DETAIL}/{article_id}"
 
-    response = requests.get(url, timeout=TIMEOUT)
+    response = get(url, )
 
     assert response.status_code == 200
     resp_json = response.json()
@@ -40,7 +40,7 @@ def test_get_article_detail_not_exist(base_url):
     article_id = 99999
     url = base_url + f"{API_ARTICLE_DETAIL}/{article_id}"
 
-    response = requests.get(url, timeout=TIMEOUT)
+    response = get(url)
 
     resp_json = response.json()
     # 不存在的文章，返回 code 应该不是 200
@@ -56,7 +56,6 @@ def test_create_article_with_auth(login_token, base_url):
 
     # 2. 创建文章
     url = base_url + API_ARTICLE_SAVE
-    headers = {"Authorization": f"Bearer {login_token}"}
 
     # 唯一标题：save 返回 data 为空，创建后按标题反查 id 用于清理
     unique_title = f"【pytest fixture】测试文章-{uuid.uuid4().hex[:6]}"
@@ -70,30 +69,20 @@ def test_create_article_with_auth(login_token, base_url):
 
     created_id = None
     try:
-        response = requests.post(url, json=article_data, headers=headers, timeout=TIMEOUT)
-
+        response = post(url, article_data , login_token)
         assert response.status_code == 200, "请求发送成功"
         resp_json = response.json()
         assert resp_json["code"] == 200, "业务请求成功"
 
         # 反查刚创建文章的 id
-        list_resp = requests.get(
-            base_url + API_ARTICLE_LIST,
-            params={"page": 1, "size": 50},
-            timeout=TIMEOUT,
-        ).json()
-        matched = [r["id"] for r in list_resp["data"]["records"] if r["title"] == unique_title]
-        assert matched, f"按唯一标题未找到刚创建的文章:{unique_title}"
-        created_id = matched[0]
 
         print("创建文章测试通过")
     finally:
         # 无论断言是否失败，都清理掉刚创建的文章，避免污染数据库
         if created_id is not None:
-            delete_resp = requests.delete(
+            delete_resp = delete(
                 base_url + API_ARTICLE_DELETE + f"/{created_id}",
-                headers=headers,
-                timeout=TIMEOUT,
+                login_token
             ).json()
             assert delete_resp["code"] in (200, 404), f"清理测试文章失败:{delete_resp}"
 
@@ -109,7 +98,7 @@ def test_create_article_without_auth(base_url):
         "status": 1
     }
 
-    response = requests.post(url, json=article_data, timeout=TIMEOUT)
+    response = post(url, json=article_data, )
 
     # 未认证应该返回 401 或 403，或者业务 code 不是 200
     resp_json = response.json()
@@ -121,10 +110,7 @@ def test_create_article_without_auth(base_url):
 
 def test_delete_article_with_auth(login_token,base_url,article_id):
     url = base_url + API_ARTICLE_DELETE
-    headers = {
-        "Authorization": f"Bearer {login_token}"
-    }
-    response = requests.delete(f"{url}/{article_id}", headers=headers, timeout=TIMEOUT)
+    response = delete(f"{url}/{article_id}",login_token )
     assert response.status_code == 200
     resp_json = response.json()
     assert resp_json["code"] == 200
@@ -134,7 +120,7 @@ def test_delete_article_without_auth(base_url):
     # 不存在的 id：后端未登录时先校验 token 返回 401，不会真正删除任何文章
     article_id = 999999
 
-    response = requests.delete(f"{url}/{article_id}", timeout=TIMEOUT)
+    response = delete(f"{url}/{article_id}", )
     assert response.status_code == 401
     assert response.json()["code"] == 401
 

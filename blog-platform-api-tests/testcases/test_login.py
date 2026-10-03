@@ -1,6 +1,6 @@
-import requests
-from config import TIMEOUT,API_LOGIN
-from utils import load_test_data
+from common.api_client import *
+
+from common.utils import load_test_data
 
 #加载测试数据
 test_data = load_test_data("test_data.json")
@@ -20,7 +20,7 @@ def test_login_success(base_url):
     url = base_url + API_LOGIN
     data = test_data["login"]["valid_user"]
     #发送
-    response = requests.post(url,json=data,timeout=TIMEOUT)
+    response = post(url,json=data)
     # 断言
     assert response.status_code == 200, f"HTTP状态码错误：{response.status_code}"
     resp_json = response.json()
@@ -34,7 +34,7 @@ def test_login_success(base_url):
 def test_login_FPassword(base_url):
     url = base_url + API_LOGIN
     data = test_data["login"]["wrong_password"]
-    response = requests.post(url,json=data,timeout=TIMEOUT)
+    response = post(url,json=data,)
     resp_json = response.json()
     assert resp_json["code"] != 200 ,"错误密码不该登录成功"
     if resp_json["data"] is not None:
@@ -45,7 +45,7 @@ def test_login_FPassword(base_url):
 def test_login_Fusername(base_url):
     url = base_url +API_LOGIN
     data = test_data["login"]["not_exist_user"]
-    response = requests.post(url,json=data,timeout=TIMEOUT)
+    response = post(url,json=data,)
 
     resp_json = response.json()
 
