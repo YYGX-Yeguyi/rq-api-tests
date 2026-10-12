@@ -1,0 +1,12 @@
+# 核心
+requests>=2.31.0
+pytest>=7.4.0
+allure-pytest>=2.13.0
+pytest-html>=4.1.0
+PyYAML>=6.0
+
+#pymysql          # 做数据库校验
+#jsonpath-ng      # 从 JSON 响应里提取字段
+#pytest-html      # 生成 HTML 报告（你 pytest.ini 里配了）
+#pytest-rerunfailures  # 失败重试
+#pytest-xdist     # 并发跑用例
